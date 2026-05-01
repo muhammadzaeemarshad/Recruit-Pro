@@ -1,0 +1,56 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
+import DepartmentForm from "./pages/Depatments";
+import Jobs from "./pages/Jobs";
+import Candidates from "./pages/Candidates";
+import CreateJob from "./pages/CreateJob";
+import Schedule from "./pages/Schedule";
+import Offers from "./pages/Offers";
+import Internal from "./pages/Internal";
+import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
+import ApplyJob from "./pages/ApplyJob";
+import CandidateView from "./pages/CandidateView";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import InterviewScheduler from "./pages/SlotSchedular";
+
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/apply/:slug" element={<ApplyJob />} />
+          <Route path="select-slot/:jobId/:candidateId" element={<InterviewScheduler/>}/>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/create" element={<CreateJob />} />
+            <Route path="/department" element={<DepartmentForm />} />
+            <Route path="/candidates" element={<Candidates />} />
+            <Route path="/candidates/view" element={<CandidateView />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/offers" element={<Offers />} />
+            <Route path="/internal" element={<Internal />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;

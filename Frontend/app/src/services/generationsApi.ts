@@ -1,0 +1,53 @@
+import { API_CONFIG } from "@/config";
+
+const API_BASE_URL = API_CONFIG.BASE_URL;
+
+export interface PromptRequest {
+  prompt: string;
+}
+
+export interface GenerationResponse {
+  caption: string;
+  image_base64: string;
+}
+
+export const generationApi = {
+
+  async generateLinkedinPost(data: PromptRequest): Promise<GenerationResponse> {
+    const response = await fetch(`${API_BASE_URL}/generate/linkedin_post`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Error:", response.status, response.statusText);
+      throw new Error(errorData.detail || "Failed to generate LinkedIn post");
+    }
+
+    return await response.json();
+  },
+
+  async sendOfferLetter(data: PromptRequest): Promise<boolean> {
+    const response = await fetch(`${API_BASE_URL}/generate/send-offer-letter`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Error:", response.status, response.statusText);
+      throw new Error(errorData.detail || "Failed to send offer letter");
+    }
+
+    return await response.json();
+  },
+};
